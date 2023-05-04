@@ -1,6 +1,6 @@
 class ServerSideStoreBackend:
     def __init__(self):
-        self.store = dict()
+        self.store = {}
 
     def get(self, key, ignore_expired=False):
         return self.store.get(key)

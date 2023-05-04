@@ -35,10 +35,10 @@ def read_dataframe_with_extension(data, filename=None):
         stem = Path(filename).name[: -len("".join(Path(filename).suffixes))]
 
         with (
-            tarfile.open(name=data)
-            if isinstance(data, (str, Path))
-            else tarfile.open(fileobj=data)
-        ) as tar:
+                    tarfile.open(name=data)
+                    if isinstance(data, (str, Path))
+                    else tarfile.open(fileobj=data)
+                ) as tar:
             df_file = None
             df_name = None
             aux_file = None
@@ -77,13 +77,13 @@ def read_dataframe_with_extension(data, filename=None):
                     raise Exception(f"Tar contains extraneous file '{member.name}'")
 
             if df_file is None:
-                raise Exception(f"Tar contains no data file called 'data.*'")
+                raise Exception("Tar contains no data file called 'data.*'")
 
             if aux_file is None:
-                raise Exception(f"Tar contains no auxiliary file called 'aux.*'")
+                raise Exception("Tar contains no auxiliary file called 'aux.*'")
 
             if meta_file is None:
-                raise Exception(f"Tar contains no metadata file called 'meta.json'")
+                raise Exception("Tar contains no metadata file called 'meta.json'")
 
             metadata = (
                 json.load(meta_file, object_pairs_hook=OrderedDict) or OrderedDict()
@@ -95,18 +95,18 @@ def read_dataframe_with_extension(data, filename=None):
             try:
                 aux = read_only_dataframe(aux_file, aux_name)
             except pd.errors.EmptyDataError:
-                aux = pd.DataFrame(dict())
+                aux = pd.DataFrame({})
 
             if len(df) != len(aux) and len(aux.columns) > 0:
                 raise Exception(
-                    f"The dataframe and auxiliary data have different number of rows."
+                    "The dataframe and auxiliary data have different number of rows."
                 )
 
             return df, aux, metadata
 
     return (
         read_only_dataframe(data, filename),
-        pd.DataFrame(dict()),
+        pd.DataFrame({}),
         OrderedDict(filename=str(filename)),
     )
 
@@ -143,7 +143,7 @@ def read_only_dataframe(data, filename):
 def write_dataframe_and_metadata(df, aux, meta, filepath, file):
     if len(df) != len(aux) and len(aux.columns) > 0:
         raise Exception(
-            f"The dataframe and auxiliary data have different number of rows."
+            "The dataframe and auxiliary data have different number of rows."
         )
 
     with tarfile.open(fileobj=file, mode="w") as tar:

@@ -24,17 +24,12 @@ def dropdown_regex(options: list, selected: list, keyword=None):
     if not selected:
         selected = []
 
-    # collect unselected options of the dropdown
-    unselected_options = []
-    for o in options:
-        if o not in selected:
-            unselected_options.append(o)
-
+    unselected_options = [o for o in options if o not in selected]
     # return if any amount of values were found with the keyword
     hits = 0
     if keyword:
         # add already selected values to the new options
-        new_options = [s for s in selected]
+        new_options = list(selected)
 
         found = False
         for o in unselected_options:
@@ -48,18 +43,11 @@ def dropdown_regex(options: list, selected: list, keyword=None):
 
         # if found any amount of values, add keyword to the new options and to the selected values
         if found:
-            selected.append(keyword + " (regex)")
-            new_options.append(keyword + " (regex)")
+            selected.append(f"{keyword} (regex)")
+            new_options.append(f"{keyword} (regex)")
         return new_options, selected or None, hits
 
-    sub_selected = []
-
-    # add every value of the dropdown to the sub_selected
-    # which is not a regex keyword
-    for s in selected:
-        if " (regex)" not in s:
-            sub_selected.append(s)
-
+    sub_selected = [s for s in selected if " (regex)" not in s]
     # update options, sub_selected and hits,
     # if any regex keywords are selected
     for s in selected:

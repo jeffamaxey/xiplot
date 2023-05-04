@@ -182,16 +182,16 @@ class Cluster(Tab):
             )
 
         @app.callback(
-            Output("cluster_feature", "options"),
-            Output("cluster_feature", "value"),
-            Output("cluster_feature", "search_value"),
-            Output("cluster-tab-regex-notify-container", "children"),
-            Input("data_frame_store", "data"),
-            Input("add_by_keyword-button", "n_clicks"),
-            Input("cluster_feature", "value"),
-            State("feature_keyword-input", "value"),
-            State("cluster_feature", "options"),
-        )
+                Output("cluster_feature", "options"),
+                Output("cluster_feature", "value"),
+                Output("cluster_feature", "search_value"),
+                Output("cluster-tab-regex-notify-container", "children"),
+                Input("data_frame_store", "data"),
+                Input("add_by_keyword-button", "n_clicks"),
+                Input("cluster_feature", "value"),
+                State("feature_keyword-input", "value"),
+                State("cluster_feature", "options"),
+            )
         def add_matching_values(df, n_clicks, features, keyword, options):
             df = df_from_store(df)
             if ctx.triggered_id == "data_frame_store":
@@ -207,7 +207,7 @@ class Cluster(Tab):
                         id=str(uuid.uuid4()),
                         color="yellow",
                         title="Warning",
-                        message=f"No regular expression was given.",
+                        message="No regular expression was given.",
                         action="show",
                         autoClose=10000,
                     )
@@ -255,15 +255,13 @@ class Cluster(Tab):
             return keyword
 
         @app.callback(
-            Output("selection_cluster_dropdown", "value"),
-            Output("selection_cluster_dropdown", "disabled"),
-            Input("cluster_selection_mode", "value"),
-            State("selection_cluster_dropdown", "value"),
-        )
+                Output("selection_cluster_dropdown", "value"),
+                Output("selection_cluster_dropdown", "disabled"),
+                Input("cluster_selection_mode", "value"),
+                State("selection_cluster_dropdown", "value"),
+            )
         def pin_selection_cluster(selection_mode, selection_cluster):
-            if not selection_mode:
-                return "c1", True
-            return selection_cluster, False
+            return (selection_cluster, False) if selection_mode else ("c1", True)
 
         @app.callback(
             Output("cluster-tab-settings-session", "children"),
@@ -350,22 +348,20 @@ class Cluster(Tab):
                 return meta["session"], False, dash.no_update, dash.no_update
 
         @app.callback(
-            Output("metadata_store", "data"),
-            State("metadata_store", "data"),
-            Input("cluster_selection_mode", "value"),
-            Input("selection_cluster_dropdown", "value"),
-        )
+                Output("metadata_store", "data"),
+                State("metadata_store", "data"),
+                Input("cluster_selection_mode", "value"),
+                Input("selection_cluster_dropdown", "value"),
+            )
         def update_settings(meta, selection_mode, selection_cluster):
             if meta is None:
                 return dash.no_update
 
-            if not selection_mode:
-                meta["settings"]["cluster-tab"] = dict(selection=dict(mode="fg-bg"))
-            else:
-                meta["settings"]["cluster-tab"] = dict(
-                    selection=dict(mode="draw", brush=selection_cluster)
-                )
-
+            meta["settings"]["cluster-tab"] = (
+                dict(selection=dict(mode="draw", brush=selection_cluster))
+                if selection_mode
+                else dict(selection=dict(mode="fg-bg"))
+            )
             return meta
 
     @staticmethod
@@ -435,7 +431,7 @@ class Cluster(Tab):
                 id=process_id or str(uuid.uuid4()),
                 color="green",
                 title="Success",
-                message=f"The data was clustered successfully!",
+                message="The data was clustered successfully!",
                 action="update" if process_id else "show",
                 autoClose=5000,
                 disallowClose=False,
@@ -450,7 +446,7 @@ class Cluster(Tab):
             [
                 layout_wrapper(
                     component=dcc.Dropdown(
-                        options=[i for i in range(2, len(cluster_colours()))],
+                        options=list(range(2, len(cluster_colours()))),
                         id="cluster_amount",
                     ),
                     css_class="dd-double-right",

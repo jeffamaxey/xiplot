@@ -61,16 +61,16 @@ class Scatterplot(Plot):
             )
 
         @app.callback(
-            output=dict(
-                selected_rows_store=Output("selected_rows_store", "data"),
-                click_store=Output("lastly_clicked_point_store", "data"),
-                scatter=Output({"type": "scatterplot", "index": ALL}, "clickData"),
-            ),
-            inputs=[
-                Input({"type": "scatterplot", "index": ALL}, "clickData"),
-                State("selected_rows_store", "data"),
-            ],
-        )
+                output=dict(
+                    selected_rows_store=Output("selected_rows_store", "data"),
+                    click_store=Output("lastly_clicked_point_store", "data"),
+                    scatter=Output({"type": "scatterplot", "index": ALL}, "clickData"),
+                ),
+                inputs=[
+                    Input({"type": "scatterplot", "index": ALL}, "clickData"),
+                    State("selected_rows_store", "data"),
+                ],
+            )
         def handle_click_events(click, selected_rows):
             # Try branch for testing
             try:
@@ -88,11 +88,7 @@ class Scatterplot(Plot):
             if row is None:
                 raise PreventUpdate()
 
-            if not selected_rows[row]:
-                selected_rows[row] = True
-            else:
-                selected_rows[row] = False
-
+            selected_rows[row] = not selected_rows[row]
             scatter_amount = len(click)
 
             return dict(
@@ -122,20 +118,20 @@ class Scatterplot(Plot):
             )
 
         @app.callback(
-            output=dict(
-                clusters=Output("clusters_column_store", "data"),
-                reset=Output("clusters_column_store_reset", "children"),
-            ),
-            inputs=[
-                Input({"type": "scatterplot", "index": ALL}, "selectedData"),
-                State("clusters_column_store", "data"),
-                State("selection_cluster_dropdown", "value"),
-                State("cluster_selection_mode", "value"),
-            ],
-        )
+                output=dict(
+                    clusters=Output("clusters_column_store", "data"),
+                    reset=Output("clusters_column_store_reset", "children"),
+                ),
+                inputs=[
+                    Input({"type": "scatterplot", "index": ALL}, "selectedData"),
+                    State("clusters_column_store", "data"),
+                    State("selection_cluster_dropdown", "value"),
+                    State("cluster_selection_mode", "value"),
+                ],
+            )
         def handle_cluster_drawing(
-            selected_data, kmeans_col, cluster_id, selection_mode
-        ):
+                selected_data, kmeans_col, cluster_id, selection_mode
+            ):
             if not selected_data:
                 return dash.no_update
 
@@ -180,10 +176,11 @@ class Scatterplot(Plot):
                 except Exception:
                     return dash.no_update
 
-            if not updated:
-                return dash.no_update
-
-            return dict(clusters=kmeans_col, reset=str(uuid.uuid4()))
+            return (
+                dict(clusters=kmeans_col, reset=str(uuid.uuid4()))
+                if updated
+                else dash.no_update
+            )
 
         @app.callback(
             output=dict(
@@ -262,13 +259,12 @@ class Scatterplot(Plot):
 
         if jitter:
             jitter = float(jitter)
-        if type(jitter) == float:
-            if jitter > 0:
-                Z = df[[x_axis, y_axis]].to_numpy("float64")
-                Z = np.random.normal(Z, jitter)
-                jitter_df = pd.DataFrame(Z, columns=[x_axis, y_axis])
-                df[["jitter-x", "jitter-y"]] = jitter_df[[x_axis, y_axis]]
-                x_axis, y_axis = "jitter-x", "jitter-y"
+        if type(jitter) == float and jitter > 0:
+            Z = df[[x_axis, y_axis]].to_numpy("float64")
+            Z = np.random.normal(Z, jitter)
+            jitter_df = pd.DataFrame(Z, columns=[x_axis, y_axis])
+            df[["jitter-x", "jitter-y"]] = jitter_df[[x_axis, y_axis]]
+            x_axis, y_axis = "jitter-x", "jitter-y"
         sizes = [0.5] * df.shape[0]
         colors = df.copy().loc[:, color]
         row_ids = []

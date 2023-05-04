@@ -122,17 +122,17 @@ class Barplot(Plot):
     def render(x_axis, y_axis, selected_clusters, order, kmeans_col, df):
         if len(kmeans_col) == df.shape[0]:
             df["Clusters"] = kmeans_col
-        if not "frequency" in df.columns:
+        if "frequency" not in df.columns:
             df["frequency"] = [1 for _ in range(len(df))]
 
         if x_axis == y_axis:
             raise Exception("The x and y axis must be different")
 
-        if not selected_clusters:
-            selected_clusters = sorted(set(kmeans_col))
-        else:
-            selected_clusters = set(selected_clusters)
-
+        selected_clusters = (
+            set(selected_clusters)
+            if selected_clusters
+            else sorted(set(kmeans_col))
+        )
         Xs = []
         Ys = []
         Cs = []
@@ -203,7 +203,7 @@ class Barplot(Plot):
                 for x, y in zip(dff[x_axis].values, dff[y_axis].values):
                     value_lookup[x].append((y, 1))
 
-            order_lookup = dict()
+            order_lookup = {}
 
             for x, vs in value_lookup.items():
                 if len(vs) <= 1:
@@ -298,7 +298,7 @@ class Barplot(Plot):
         except Exception:
             x_axis = None
 
-        if x_axis is None and len(x_columns) > 0:
+        if x_axis is None and x_columns:
             x_axis = x_columns[0]
 
         if x_axis is None:

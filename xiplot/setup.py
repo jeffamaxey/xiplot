@@ -26,9 +26,7 @@ def setup_xiplot_dash_app(unsafe_local_server=False, **kwargs):
         )
 
         def df_from_store(df):
-            if isinstance(df, pd.DataFrame):
-                return df.copy(deep=False)
-            return df
+            return df.copy(deep=False) if isinstance(df, pd.DataFrame) else df
 
         def df_to_store(df):
             return df

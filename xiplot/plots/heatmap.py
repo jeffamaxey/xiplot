@@ -119,14 +119,13 @@ class Heatmap(Plot):
 
         cluster_centers = km.cluster_centers_
 
-        fig = px.imshow(
+        return px.imshow(
             cluster_centers,
             x=features,
             y=[str(n + 1) for n in range(n_clusters)],
             color_continuous_scale="RdBu",
             origin="lower",
         )
-        return fig
 
     @staticmethod
     def create_new_layout(index, df, columns, config=dict()):

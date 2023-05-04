@@ -24,12 +24,11 @@ def get_smiles_inputs(smiles_render_modes, render_mode, smiles_inputs, df, row):
     if render_mode not in smiles_render_modes:
         return no_update
 
-    ids = []
-    for id, mode in enumerate(smiles_render_modes):
-        if mode != render_mode:
-            continue
-        ids.append(id)
-
+    ids = [
+        id
+        for id, mode in enumerate(smiles_render_modes)
+        if mode == render_mode
+    ]
     smiles_col = get_smiles_column_name(df)
     for i in ids:
         smiles_inputs[i] = df.iloc[row][smiles_col]

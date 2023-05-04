@@ -21,14 +21,12 @@ def layout_wrapper(component, id="", style=None, css_class=None, title=None):
 
         layout: html.Div element
     """
-    layout = html.Div(
+    return html.Div(
         children=[html.Div(title), component],
         id=id,
         style=style,
         className=css_class,
     )
-
-    return layout
 
 
 def delete_button(type, index):
@@ -78,7 +76,7 @@ def cluster_dropdown(
 
         layout: html.Div element
     """
-    layout = layout_wrapper(
+    return layout_wrapper(
         component=dcc.Dropdown(
             id={"type": id_name, "index": id_index} if id_index else id_name,
             clearable=clearable,
@@ -95,7 +93,9 @@ def cluster_dropdown(
                                 className="color-rect",
                             ),
                             html.Div(
-                                "everything" if cluster == "all" else f"cluster #{i}",
+                                "everything"
+                                if cluster == "all"
+                                else f"cluster #{i}",
                                 style={
                                     "display": "inline-block",
                                     "padding-left": 10,
@@ -103,7 +103,7 @@ def cluster_dropdown(
                             ),
                             html.Div(
                                 id={
-                                    "type": f"cluster-dropdown-count",
+                                    "type": "cluster-dropdown-count",
                                     "index": f"{cluster}-{uuid.uuid4()}",
                                 },
                                 style={
@@ -118,11 +118,12 @@ def cluster_dropdown(
                     ),
                     "value": cluster,
                 }
-                for i, (cluster, colour) in enumerate(cluster_colours().items())
+                for i, (cluster, colour) in enumerate(
+                    cluster_colours().items()
+                )
             ],
         ),
         title=title,
         css_class=css_class,
         style=style,
     )
-    return layout

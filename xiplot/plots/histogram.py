@@ -80,9 +80,7 @@ class Histogram(Plot):
     def render(x_axis, selected_clusters, kmeans_col, df):
         if len(kmeans_col) == df.shape[0]:
             df["Clusters"] = kmeans_col
-        fig = make_fig_property(df, x_axis, selected_clusters, kmeans_col)
-
-        return fig
+        return make_fig_property(df, x_axis, selected_clusters, kmeans_col)
 
     @staticmethod
     def create_new_layout(index, df, columns, config=dict()):

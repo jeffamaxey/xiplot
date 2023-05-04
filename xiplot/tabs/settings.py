@@ -5,8 +5,8 @@ from dash import html, Input, Output
 
 
 class Settings(Tab):
-    def register_callbacks(app, df_from_store, df_to_store):
-        app.clientside_callback(
+    def register_callbacks(self, df_from_store, df_to_store):
+        self.clientside_callback(
             """
             function toggleLightDarkMode(nClicks) {
                 if (nClicks % 2 == 1) {

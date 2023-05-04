@@ -160,25 +160,25 @@ class Data(Tab):
                 )
 
         @app.callback(
-            ServersideOutput("data_frame_store", "data"),
-            Output("metadata_store", "data"),
-            Output("clusters_column_store", "data"),
-            Output("selected_rows_store", "data"),
-            Output("clusters_column_store_reset", "children"),
-            Output("data-tab-notify-container", "children"),
-            Input("submit-button", "n_clicks"),
-            Input("uploaded_data_file_store", "data"),
-            Input("uploaded_auxiliary_store", "data"),
-            Input("uploaded_metadata_store", "data"),
-            State("data_files", "value"),
-        )
+                ServersideOutput("data_frame_store", "data"),
+                Output("metadata_store", "data"),
+                Output("clusters_column_store", "data"),
+                Output("selected_rows_store", "data"),
+                Output("clusters_column_store_reset", "children"),
+                Output("data-tab-notify-container", "children"),
+                Input("submit-button", "n_clicks"),
+                Input("uploaded_data_file_store", "data"),
+                Input("uploaded_auxiliary_store", "data"),
+                Input("uploaded_metadata_store", "data"),
+                State("data_files", "value"),
+            )
         def choose_file(
-            data_btn,
-            uploaded_data,
-            uploaded_aux,
-            uploaded_meta,
-            filepath,
-        ):
+                data_btn,
+                uploaded_data,
+                uploaded_aux,
+                uploaded_meta,
+                filepath,
+            ):
             trigger = ctx.triggered_id
 
             if not filepath:
@@ -281,7 +281,7 @@ class Data(Tab):
                 )
 
             if meta.get("settings") is None:
-                meta["settings"] = dict()
+                meta["settings"] = {}
 
             if meta.get("plots") is None:
                 meta["plots"] = OrderedDict()
@@ -376,26 +376,26 @@ class Data(Tab):
             )
 
         @app.callback(
-            Output("data-download", "data"),
-            Output("data-tab-download-notify-container", "children"),
-            Input("download-data-file-button", "n_clicks"),
-            Input("download-plots-file-button", "n_clicks"),
-            State("data_files", "value"),
-            State("data_frame_store", "data"),
-            State("metadata_store", "data"),
-            State("clusters_column_store", "data"),
-            State("selected_rows_store", "data"),
-            prevent_initial_call=True,
-        )
+                Output("data-download", "data"),
+                Output("data-tab-download-notify-container", "children"),
+                Input("download-data-file-button", "n_clicks"),
+                Input("download-plots-file-button", "n_clicks"),
+                State("data_files", "value"),
+                State("data_frame_store", "data"),
+                State("metadata_store", "data"),
+                State("clusters_column_store", "data"),
+                State("selected_rows_store", "data"),
+                prevent_initial_call=True,
+            )
         def download_file(
-            d_clicks,
-            p_clicks,
-            filepath,
-            df,
-            meta,
-            clusters,
-            selected_rows,
-        ):
+                d_clicks,
+                p_clicks,
+                filepath,
+                df,
+                meta,
+                clusters,
+                selected_rows,
+            ):
             df = df_from_store(df)
 
             if filepath is None or df is None:
@@ -437,7 +437,7 @@ class Data(Tab):
 
             if ctx.triggered_id == "download-plots-file-button":
                 try:
-                    aux = dict()
+                    aux = {}
 
                     if clusters is not None:
                         aux["cluster"] = clusters
